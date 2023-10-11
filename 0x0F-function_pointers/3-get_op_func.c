@@ -1,46 +1,33 @@
 #include "3-calc.h"
 
 /**
- * main - program that perfroms simple operations
- * @argc: number of arguments
- * @argv: array of arguments
+ * get_op_func - function pointer that selects the correct function to perform
+ * the operation asked by the user
+ * @s: the operator given by the user
  *
- * Return: Always 0 (Success)
+ * Return: pointer to the function that corresponds to the
+ * operator given as a parameter
  */
-int main(int argc, char *argv[])
+int (*get_op_func(char *s))(int, int)
 {
-	int arg1, arg2, result;
-	char o;
-	int (*func)(int, int);
+	op_t ops[] = {
+		{"+", op_add},
+		{"-", op_sub},
+		{"*", op_mul},
+		{"/", op_div},
+		{"%", op_mod},
+		{NULL, NULL}
+	};
+	int i;
 
-	if (argc != 4)
+	i = 0;
+
+	while (ops[i].op)
 	{
-		printf("Error\n");
-		exit(98);
+		if (strcmp(ops[i].op, s) == 0)
+			return (ops[i].f);
+		i++;
 	}
 
-	arg1 = atoi(argv[1]);
-	arg2 = atoi(argv[3]);
-
-	func = get_op_func(argv[2]);
-
-	if (!func)
-	{
-		printf("Error\n");
-		exit(99);
-	}
-
-	o = *argv[2];
-
-	if ((o == '/' || o == '%') && arg2 == 0)
-	{
-		printf("Error\n");
-		exit(100);
-	}
-
-	result = func(arg1, arg2);
-
-	printf("%d\n", result);
-
-	return (0);
+	return (NULL);
 }
